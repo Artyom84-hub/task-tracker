@@ -12,23 +12,6 @@ import { randomUUID } from 'crypto';
 
 export const cardsRouter = express.Router();
 
-cardsRouter.post(
-  '/',
-  async (
-    request: Request<{}, Card, CreateCardRequest>,
-    response: Response<Card>,
-  ) => {
-    const card: Card = {
-      text: request.body.text,
-      id: randomUUID(),
-    };
-
-    await createCard(card);
-
-    response.send(card);
-  },
-);
-
 cardsRouter.get(
   '/',
   async (request: Request<{}, {}>, response: Response<GetCardsResponse>) => {
@@ -49,6 +32,22 @@ cardsRouter.get(
       response.status(404).send('Card not found');
       return;
     }
+    response.send(card);
+  },
+);
+
+cardsRouter.post(
+  '/',
+  async (
+    request: Request<{}, Card, CreateCardRequest>,
+    response: Response<Card>,
+  ) => {
+    const card: Card = {
+      text: request.body.text,
+      id: randomUUID(),
+    };
+
+    await createCard(card);
 
     response.send(card);
   },

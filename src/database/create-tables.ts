@@ -1,4 +1,5 @@
 import { sqliteRun } from './db-connection';
+
 export const createTables = async (): Promise<void> => {
   await sqliteRun(`
     CREATE TABLE IF NOT EXISTS cards (
@@ -6,4 +7,4 @@ export const createTables = async (): Promise<void> => {
       text TEXT NOT NULL
     );
     `);
-}
+};

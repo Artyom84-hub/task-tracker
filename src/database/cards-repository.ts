@@ -1,42 +1,44 @@
 import { Card } from '../types/cards';
 import { sqliteAll, sqliteGet, sqliteRun } from './db-connection';
 
-// Create
+//Create
 export const createCard = async (card: Card): Promise<void> => {
   await sqliteRun(
     `
-      INSERT INTO cards (id, text)
-      VALUES (?,?);
+    INSERT INTO cards (id, text) 
+    VALUES (?,?);
     `,
     [card.id, card.text],
   );
 };
-// Update
+//Update
 export const updateCard = async (card: Card): Promise<void> => {
   await sqliteRun(
     `
-      UPDATE cards SET text = ?
-      WHERE id = ?;
+    UPDATE cards SET text = ? 
+    WHERE id = ?;
     `,
-    [card.id, card.text],
+    [card.text, card.id],
   );
 };
-// Delete
+//Delete
 export const deleteCard = async (id: string): Promise<void> => {
   await sqliteRun(
     `
-      DELETE FROM cards 
-      WHERE id = ?;
+    DELETE FROM cards 
+    WHERE id = ?;
     `,
     [id],
   );
 };
-// GetOne
+//GetOne
 export const getOneCard = async (id: string): Promise<Card | null> => {
-  const data = await sqliteGet(`
-    SELECT * FROM cards
+  const data = await sqliteGet(
+    `
+    SELECT * FROM cards 
     WHERE id = ?;
-    `, [id],
+    `,
+    [id],
   );
 
   if (isCard(data)) {
@@ -45,7 +47,7 @@ export const getOneCard = async (id: string): Promise<Card | null> => {
 
   return null;
 };
-// GetMany
+//GetMany
 export const getManyCards = async (): Promise<Card[]> => {
   const data = await sqliteAll(
     `
@@ -58,15 +60,16 @@ export const getManyCards = async (): Promise<Card[]> => {
     throw new Error('Unknown data format on getMany');
   }
 
-  return data.map((one) => {
-    if (isCard(one)) {
-      return one;
-    }
+  return data
+    .map((one) => {
+      if (isCard(one)) {
+        return one;
+      }
 
-    return undefined;
-  }).filter((one) => one !== undefined);
-
-}
+      return undefined;
+    })
+    .filter((one) => one !== undefined);
+};
 
 const isCard = (data: unknown): data is Card => {
   const card = data as Card;

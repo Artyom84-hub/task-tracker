@@ -4,7 +4,7 @@ import { cardsRouter } from './routers/cards.router';
 import { createTables } from './database/create-tables';
 
 async function run() {
-await createTables();
+  await createTables();
 
   const server = express();
   server.use(express.json());
@@ -19,4 +19,3 @@ await createTables();
 }
 
 run().catch((error) => console.error(error));
-
