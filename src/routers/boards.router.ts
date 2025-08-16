@@ -1,6 +1,5 @@
 import express, { Request, Response } from 'express';
 import { Board, CreateBoardRequest, GetBoardsResponse } from '../types/boards';
-import { IdParams } from '../types/common';
 import {
   createBoard,
   deleteBoard,
@@ -10,6 +9,7 @@ import {
 } from '../database/boards-repository';
 import { randomUUID } from 'crypto';
 import { validateBoardInput } from './validation';
+import { BoardIdParams } from '../types/common';
 
 export const boardsRouter = express.Router();
 
@@ -22,12 +22,12 @@ boardsRouter.get(
 );
 
 boardsRouter.get(
-  '/:id',
+  '/:boardId',
   async (
-    request: Request<IdParams, Board | string, {}>,
+    request: Request<BoardIdParams, Board | string, {}>,
     response: Response<Board | string>,
   ) => {
-    const board = await getOneBoard(request.params.id);
+    const board = await getOneBoard(request.params.boardId);
 
     if (!board) {
       response.status(404).send('Board not found');
@@ -56,13 +56,14 @@ boardsRouter.post(
 );
 
 boardsRouter.put(
-  '/:id', validateBoardInput,
+  '/:boardId',
+  validateBoardInput,
   async (
-    request: Request<IdParams, Board, CreateBoardRequest>,
+    request: Request<BoardIdParams, Board, CreateBoardRequest>,
     response: Response<Board>,
   ) => {
     const board = {
-      id: request.params.id,
+      id: request.params.boardId,
       name: request.body.name,
     };
 
@@ -72,9 +73,9 @@ boardsRouter.put(
 );
 
 boardsRouter.delete(
-  '/:id',
-  async (request: Request<IdParams>, response: Response<void>) => {
-    await deleteBoard(request.params.id);
+  '/:boardId',
+  async (request: Request<BoardIdParams>, response: Response<void>) => {
+    await deleteBoard(request.params.boardId);
     response.sendStatus(204);
   },
 );

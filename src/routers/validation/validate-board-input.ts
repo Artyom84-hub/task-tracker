@@ -1,9 +1,7 @@
 import { Request, Response } from 'express';
 import { Board, CreateBoardRequest } from '../../types/boards';
-import { IdParams } from '../../types/common';
-
 export const validateBoardInput = (
-  {body}: Request<IdParams, Board, CreateBoardRequest>,
+  {body}: Request<unknown, Board, CreateBoardRequest>,
   response: Response,
   next: () => void,
 ): void => {
